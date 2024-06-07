@@ -39,15 +39,35 @@ void sort_nib(int* arr, int length) {
     int size = length * 8;
     char nibs[size];
     int counter = 0;
-    for (int i = 0; i < length; i++) {
-        for (int j = 7; j >= 0; j--) {
-            // 
-            nibs[counter] = (arr[i] >> (4 * j)) & 0xF;
-            counter++;
+
+    int i = 0;
+loop1:
+    if (i >= length) goto sort;
+    int j = 7;
+loop2:
+    if (j < 0) {
+        i++;
+        goto loop1;
+    }
+    // each nibs[counter] will store 4 bits (each hex digit is a 4 bit representation)
+    // we have to go by each 4 bits which is why we do (4 * j)
+    // 0xF is also 4 bits; we use that as a mask to extract only 4 bits at a time
+    // we are extracting 4 bits at a time when we do (arr[i] >> (4 * j)) & 0xF
+    // we are shifting it (4 * j) so that it aligns properly with 0xF when we mask it
+    nibs[counter] = (arr[i] >> (4 * j)) & 0xF;
+    counter++;
+    j--;
+    goto loop2;
+
+    // for (int i = 0; i < length; i++) {
+    //     for (int j = 7; j >= 0; j--) {
+    //         
+    //         nibs[counter] = (arr[i] >> (4 * j)) & 0xF;
+    //         counter++;
 
             
-        }
-    }
+    //     }
+    // }
 
     // printf("before: ");
     // for (int i = 0; i < size; i++) {
@@ -55,17 +75,34 @@ void sort_nib(int* arr, int length) {
     // }
     // printf("\n");
     
+sort:
+    i = 0;
+loop3:
+    if (i >= size-1) goto lastpart;
+    j = 0;
+loop4:
+    if (j >= size-i-1) {
+        i++;
+        goto loop3;
+    }
+    if (nibs[j] > nibs[j+1]) {
+        char temp = nibs[j];
+        nibs[j] = nibs[j+1];
+        nibs[j+1] = temp;
+    }
+    j++;
+    goto loop4;
 
     // bubble sort
-    for (int i = 0; i < (size) - 1; i++) {
-        for (int j = 0; j < (size) - i - 1; j++) {
-            if (nibs[j] > nibs[j+1]) {
-                char temp = nibs[j];
-                nibs[j] = nibs[j+1];
-                nibs[j+1] = temp;
-            }
-        }
-    }
+    // for (int i = 0; i < (size) - 1; i++) {
+    //     for (int j = 0; j < (size) - i - 1; j++) {
+    //         if (nibs[j] > nibs[j+1]) {
+    //             char temp = nibs[j];
+    //             nibs[j] = nibs[j+1];
+    //             nibs[j+1] = temp;
+    //         }
+    //     }
+    // }
 
     // printf("after: ");
     // for (int i = 0; i < size; i++) {
@@ -73,18 +110,33 @@ void sort_nib(int* arr, int length) {
     // }
     // printf("\n");
 
+lastpart:
     int index = 0;
-    for (int i = 0; i < length; i++) {
-        arr[i] = 0;
-        for (int j = 7; j >= 0; j--) {
-
-            arr[i] |= (nibs[index] << (4 * j));
-            index++;
-
-        }
+    i = 0;
+loop5:
+    if (i >= length) return;
+    arr[i] = 0;
+    j = 7;
+loop6:
+    if (j < 0) {
+        i++;
+        goto loop5;
     }
-    
+    arr[i] |= (nibs[index] << (4 * j));
+    index++;
+    j--;
+    goto loop6;
 
+    // for (int i = 0; i < length; i++) {
+    //     arr[i] = 0;
+    //     for (int j = 7; j >= 0; j--) {
+
+    //         arr[i] |= (nibs[index] << (4 * j));
+    //         index++;
+
+    //     }
+    // }
+    
 }
 
 
