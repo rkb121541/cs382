@@ -7,7 +7,12 @@
 */
 
 void copy_str(char* src, char* dst) {
-    /* Your code here */
+    int index = 0;
+loop:
+    dst[index] = src[index];
+    if (src[index] == 0) return;
+    index++;
+    goto loop;
 }
 
 int dot_prod(char* vec_a, char* vec_b, int length, int size_elem) {
@@ -15,11 +20,71 @@ int dot_prod(char* vec_a, char* vec_b, int length, int size_elem) {
        Do not cast the vectors directly, such as
        int* va = (int*)vec_a;
     */
-   return 0; // Please modify this line as needed
+//    return 0; // Please modify this line as needed
+    int result = 0;
+    int counter = 0;
+loop:
+    if (counter == length) return result;
+
+    int first = *((int*)(vec_a + (counter * size_elem))); 
+    int second = *((int*)(vec_b + (counter * size_elem))); 
+    // printf("first: %d, second: %d\n", first, second);
+    result += first * second;
+    counter++;
+    goto loop;
 }
 
 void sort_nib(int* arr, int length) {
     /* Your code here */
+    int size = length * 8;
+    char nibs[size];
+    int counter = 0;
+    for (int i = 0; i < length; i++) {
+        for (int j = 7; j >= 0; j--) {
+            // 
+            nibs[counter] = (arr[i] >> (4 * j)) & 0xF;
+            counter++;
+
+            
+        }
+    }
+
+    // printf("before: ");
+    // for (int i = 0; i < size; i++) {
+    //     printf("%x", nibs[i]);
+    // }
+    // printf("\n");
+    
+
+    // bubble sort
+    for (int i = 0; i < (size) - 1; i++) {
+        for (int j = 0; j < (size) - i - 1; j++) {
+            if (nibs[j] > nibs[j+1]) {
+                char temp = nibs[j];
+                nibs[j] = nibs[j+1];
+                nibs[j+1] = temp;
+            }
+        }
+    }
+
+    // printf("after: ");
+    // for (int i = 0; i < size; i++) {
+    //     printf("%x", nibs[i]);
+    // }
+    // printf("\n");
+
+    int index = 0;
+    for (int i = 0; i < length; i++) {
+        arr[i] = 0;
+        for (int j = 7; j >= 0; j--) {
+
+            arr[i] |= (nibs[index] << (4 * j));
+            index++;
+
+        }
+    }
+    
+
 }
 
 
