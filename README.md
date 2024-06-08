@@ -1,1 +1,1 @@
-only includes the assignments with programming
+only includes programming assignments, nothing with logism
